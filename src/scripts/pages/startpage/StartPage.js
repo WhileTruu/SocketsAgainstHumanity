@@ -2,9 +2,15 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import io from 'socket.io-client'
 
-import { createRoom, joinRoom, joinedRoom } from './startAction'
-
+import { createRoom, joinedRoom } from './startAction'
 const socket = io()
+
+/* TODO:
+ * 1. Fix problem with room names being weird
+ * 2. Add some validation rules for nickname
+ * 3. Make finding a room possible
+ */
+
 
 export default class StartPage extends Component {
   static propTypes = {
@@ -18,62 +24,60 @@ export default class StartPage extends Component {
 
   constructor(props) {
     super(props)
+    this.state = {
+      nickname: '',
+    }
     socket.on('joined room', (roomName) => {
       this.props.dispatch(joinedRoom(roomName))
-      this.context.router.push(`rooms/${roomName}`)
+      console.log(this)
+      this.context.router.push({ pathname: `rooms/${roomName}` })
     })
   }
 
   onCreateRoom(event) {
     event.preventDefault()
-    console.log(socket.id)
-    this.props.dispatch(createRoom(socket.id, this.refs.nickname.value))
-    console.log(this)
+    this.props.dispatch(createRoom(socket.id, this.state.nickname))
   }
 
-  onJoinRoom(event) {
+  onFindRoom(event) {
     event.preventDefault()
-    console.log(socket.id)
-    this.props.dispatch(joinRoom(socket.id, this.refs.room.value, this.refs.nickname.value))
+    console.log('I want to join a room.')
+  }
+
+  onNameChange(event) {
+    this.setState({ nickname: event.target.value })
   }
 
 
   render() {
-    console.log(this.props.startReducer)
     return (
       <div>
         <div className="create-room-container">
-          <form onSubmit={::this.onCreateRoom}>
+          <div>
             <input
               className="text-input"
               type="text"
               ref="nickname"
+              onChange={::this.onNameChange}
               placeholder="enter your nickname"
             />
+          </div>
+          <div>
             <input
               className="create-room-button"
-              type="submit"
-              ref="createRoom"
+              type="button"
+              onClick={::this.onCreateRoom}
               value="create"
             />
-          </form>
-        </div>
-        'cabbage'
-        <div className="join-room-container">
-          <form onSubmit={::this.onJoinRoom}>
-            <input
-              className="text-input"
-              type="text"
-              ref="room"
-              placeholder="enter room id"
-            />
+          </div>
+          <div>
             <input
               className="join-room-button"
-              type="submit"
-              ref="joinRoom"
+              type="button"
+              onClick={::this.onFindRoom}
               value="join"
             />
-          </form>
+          </div>
         </div>
       </div>
     )

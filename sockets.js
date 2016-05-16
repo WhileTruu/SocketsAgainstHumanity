@@ -4,7 +4,7 @@ import {
 import Game from './server/Game'
 import { getRandomName } from './server/utilities'
 
-const games = []
+let games = []
 
 function socketGetRandomCard(socket, io) {
   socket.on('get random card', () => {
@@ -20,8 +20,8 @@ function socketGetRandomCard(socket, io) {
 
 function createRoom(socket) {
   socket.on('create room', (data) => {
+    games = []
     const newRoomName = getRandomName()
-    console.log(socket.id, data.id, data.nickname)
 
     const game = new Game(newRoomName, data.nickname, `/#${data.id}`)
     games.push(game)
