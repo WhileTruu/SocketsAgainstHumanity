@@ -1,1 +1,1 @@
-# wp-react-boilerplate# SocketsAgainstHumanity
+# SocketsAgainstHumanity
