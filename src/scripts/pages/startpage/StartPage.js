@@ -1,9 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import io from 'socket.io-client'
 
 import { createRoom, joinedRoom } from './startAction'
-const socket = io()
 
 /* TODO:
  * 1. Fix problem with room names being weird
@@ -16,6 +14,7 @@ export default class StartPage extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
     startReducer: PropTypes.object.isRequired,
+    route: PropTypes.object.isRequired,
   }
 
   static contextTypes = {
@@ -27,16 +26,16 @@ export default class StartPage extends Component {
     this.state = {
       nickname: '',
     }
-    socket.on('joined room', (roomName) => {
+    this.props.route.socket.on('joined room', (roomName) => {
+      console.log('yolo')
       this.props.dispatch(joinedRoom(roomName))
-      console.log(this)
       this.context.router.push({ pathname: `rooms/${roomName}` })
     })
   }
 
   onCreateRoom(event) {
     event.preventDefault()
-    this.props.dispatch(createRoom(socket.id, this.state.nickname))
+    this.props.dispatch(createRoom(this.props.route.socket.id, this.state.nickname, this.props.route.socket))
   }
 
   onFindRoom(event) {

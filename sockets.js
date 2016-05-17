@@ -19,15 +19,16 @@ function socketGetRandomCard(socket, io) {
   })
 }
 
-function createRoom(socket) {
+function createRoom(socket, io) {
   socket.on('create room', (data) => {
     games = []
     const newRoomName = getRandomName()
 
+    console.log(data.nickname, `/#${data.id}`, socket.id)
     const game = new Game(newRoomName, data.nickname, `/#${data.id}`)
     games.push(game)
-
-    socket.broadcast.to(`/#${data.id}`).emit('joined room', newRoomName)
+    // socket.emit('joined room', newRoomName)
+    io.to(socket.id).emit('joined room', newRoomName)
     console.log(games[0])
   })
 }
@@ -51,6 +52,7 @@ function getRoomList(socket, io) {
 
 function getPlayerList(socket) {
   socket.on('get player list', (data) => {
+    console.log(data)
     socket.broadcast.to(`/#${data.socketId}`).emit('player list', games.filter((game) => game.id === data.gameId)[0].players)
   })
 }
@@ -58,7 +60,7 @@ function getPlayerList(socket) {
 export function addListenersToSocket(io) {
   io.on('connection', (socket) => {
     // joinRoom(socket)
-    createRoom(socket)
+    createRoom(socket, io)
     joinRoom(socket)
     socketGetRandomCard(socket, io)
     getRoomList(socket, io)

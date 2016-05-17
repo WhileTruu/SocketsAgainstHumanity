@@ -6,6 +6,7 @@ class App extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
     children: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]),
+    route: PropTypes.object.isRequired,
   };
 
   render() {

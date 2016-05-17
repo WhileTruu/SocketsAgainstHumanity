@@ -1,30 +1,30 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import io from 'socket.io-client'
 
 import { receivedPlayerList } from './singleRoomAction'
-const socket = io()
 
 class SingleRoomPage extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
     singleRoomReducer: PropTypes.object.isRequired,
+    params: PropTypes.object.isRequired,
+    route: PropTypes.object.isRequired,
   }
 
   // TODO: get the room id here somehow :D
   constructor(props) {
     super(props)
-    socket.on('player list', (players) => {
-      this.props.dispatch(receivedPlayerList(players, roomId))
+    this.props.route.socket.on('player list', (players) => {
+      console.log('got player list')
+      this.props.dispatch(receivedPlayerList(players, this.props.params.id))
     })
   }
 
   componentWillMount() {
-    socket.emit('get player list', socket.id)
+    this.props.route.socket.emit('get player list', { socketId: this.props.route.socket.id, gameId: this.props.params.id })
   }
 
   render() {
-    console.log(this.props.singleRoomReducer.players)
     return (
       <div className="rooms-page">
 

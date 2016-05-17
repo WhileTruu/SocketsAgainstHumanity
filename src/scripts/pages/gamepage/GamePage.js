@@ -1,18 +1,16 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import io from 'socket.io-client'
 
 import { getRandomCard, retrievedRandomCard } from './cardAction'
-
-const socket = io()
 
 export default class GamePage extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
+    route: PropTypes.object.isRequired,
   }
   constructor(props) {
     super(props)
-    socket.on('get random card', (results) => {
+    this.props.route.socket.on('get random card', (results) => {
       this.props.dispatch(retrievedRandomCard(results))
     })
   }

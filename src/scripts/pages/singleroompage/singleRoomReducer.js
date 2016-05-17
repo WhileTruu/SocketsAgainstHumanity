@@ -2,7 +2,7 @@ import {
   PLAYERS_ARE_NOT_LOADING,
   PLAYERS_ARE_LOADING,
   RECEIVED_PLAYER_LIST,
-} from './roomsAction'
+} from './singleRoomAction'
 
 export default function singleRoomReducer(state = { players: [], isLoading: false }, result) {
   switch (result.type) {

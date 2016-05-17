@@ -7,13 +7,16 @@ import RoomsPage from './pages/roomspage/RoomsPage'
 import SingleRoomPage from './pages/singleroompage/SingleRoomPage'
 // import Loader from './components/Loader'
 
+import io from 'socket.io-client'
+const socket = io()
+
 export default (
   <Router history={browserHistory}>
-    <Route path="/" component={App}>
-      <IndexRoute component={StartPage} />
-      <Route path="rooms/:id" component={SingleRoomPage} />
-      <Route path="rooms" component={RoomsPage} />
-      <Route path="rooms/:id/game" component={GamePage} />
+    <Route path="/" socket={socket} component={App}>
+      <IndexRoute socket={socket} component={StartPage} />
+      <Route path="rooms/:id" socket={socket} component={SingleRoomPage} />
+      <Route path="rooms" socket={socket} component={RoomsPage} />
+      <Route path="rooms/:id/game" socket={socket} component={GamePage} />
     </Route>
   </Router>
 )
