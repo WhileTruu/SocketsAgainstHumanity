@@ -5,6 +5,7 @@ import Game from './server/Game'
 import { getRandomName } from './server/utilities'
 
 let games = []
+import { cloneDeep } from 'lodash'
 
 function socketGetRandomCard(socket, io) {
   socket.on('get random card', () => {
@@ -42,11 +43,25 @@ function joinRoom(socket) {
   })
 }
 
+function getRoomList(socket, io) {
+  socket.on('get room list', () => {
+    io.emit('room list', cloneDeep(games).map((game) => game.id))
+  })
+}
+
+function getPlayerList(socket) {
+  socket.on('get player list', (data) => {
+    socket.broadcast.to(`/#${data.socketId}`).emit('player list', games.filter((game) => game.id === data.gameId)[0].players)
+  })
+}
+
 export function addListenersToSocket(io) {
   io.on('connection', (socket) => {
     // joinRoom(socket)
     createRoom(socket)
     joinRoom(socket)
     socketGetRandomCard(socket, io)
+    getRoomList(socket, io)
+    getPlayerList(socket)
   })
 }

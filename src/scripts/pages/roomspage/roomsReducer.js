@@ -1,24 +1,24 @@
 import {
-  RANDOM_CARD,
-  CARD_IS_LOADING,
-  CARD_IS_NOT_LOADING,
-} from './cardAction'
+  ROOMS_ARE_NOT_LOADING,
+  ROOMS_ARE_LOADING,
+  RECEIVED_ROOM_LIST,
+} from './roomsAction'
 
-export default function cardReducer(state = { results: {}, isLoading: false }, result) {
+export default function roomsReducer(state = { results: [], isLoading: false }, result) {
   switch (result.type) {
-    case RANDOM_CARD: {
+    case RECEIVED_ROOM_LIST: {
       return {
         results: result.results,
         isLoading: false,
       }
     }
-    case CARD_IS_LOADING: {
+    case ROOMS_ARE_LOADING: {
       return {
         results: state.results,
         isLoading: true,
       }
     }
-    case CARD_IS_NOT_LOADING: {
+    case ROOMS_ARE_NOT_LOADING: {
       return {
         results: state.results,
         isLoading: false,
