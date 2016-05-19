@@ -1,8 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
-import { getRandomCard, retrievedRandomCard } from './cardAction'
-
 export default class GamePage extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
@@ -10,14 +8,15 @@ export default class GamePage extends Component {
   }
   constructor(props) {
     super(props)
-    this.props.route.socket.on('get random card', (results) => {
+    /* this.props.route.socket.on('get random card', (results) => {
       this.props.dispatch(retrievedRandomCard(results))
-    })
+    })*/
+    console.log('empty constructor')
   }
 
   onClickHandler(event) {
     event.preventDefault()
-    this.props.dispatch(getRandomCard())
+    // this.props.dispatch(getRandomCard())
   }
   render() {
     return (

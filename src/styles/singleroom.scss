@@ -1,0 +1,21 @@
+.component-heading {
+  text-align: center;
+  font-size: 2rem;
+  color: #333;
+}
+
+.player-name {
+  text-align: center;
+}
+
+.single-room {
+  @extend .main-button;
+  display: flex;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+.room-item {
+  text-align: center;
+  width: 100%
+}

@@ -3,12 +3,13 @@ import {
 } from './server/dbActions'
 import Game from './server/Game'
 import { getRandomName } from './server/utilities'
-
-let games = []
 import { cloneDeep } from 'lodash'
+
+const games = []
 
 function socketGetRandomCard(socket, io) {
   socket.on('get random card', () => {
+    console.log(`${socket.id} has asked for a random card`)
     getRandomCard()
       .then((response) => {
         io.emit('get random card', response)
@@ -19,51 +20,62 @@ function socketGetRandomCard(socket, io) {
   })
 }
 
+function updateAvailableRooms(io) {
+  io.emit('available rooms', cloneDeep(games).map((game) => ({
+    id: game.id,
+    playerCount: game.players.length,
+    creator: game.creatorNickname,
+  })))
+}
+
+function updatePlayerListForRoom(room, io) {
+  io.to(room).emit('player list', games.filter((game) => game.id === room)[0].players)
+}
+
 function createRoom(socket, io) {
   socket.on('create room', (data) => {
-    games = []
     const newRoomName = getRandomName()
+    socket.join(newRoomName)
 
-    console.log(data.nickname, `/#${data.id}`, socket.id)
-    const game = new Game(newRoomName, data.nickname, `/#${data.id}`)
+    const game = new Game(newRoomName, data.creator, socket.id)
     games.push(game)
-    // socket.emit('joined room', newRoomName)
-    io.to(socket.id).emit('joined room', newRoomName)
-    console.log(games[0])
+
+    io.to(newRoomName).emit('room was created', newRoomName)
+    updateAvailableRooms(io)
   })
 }
 
-function joinRoom(socket) {
+function joinRoom(socket, io) {
   socket.on('join room', (data) => {
-    const thisGame = games.filter((game) => game.id === data.roomName)
+    const thisGame = games.filter((game) => game.id === data.room)
+
     if (thisGame.length > 0) {
-      thisGame[0].addPlayer(data.nickname, `/#${data.id}`)
-      socket.broadcast.to(`/#${data.id}`).emit('joined room', thisGame.id)
+      thisGame[0].addPlayer(data.player, socket.id)
+      socket.join(thisGame[0].id)
+      io.to(thisGame[0].id).emit('joined room', thisGame[0].id)
+      updatePlayerListForRoom(thisGame[0].id, io)
     }
-    console.log(games[0])
   })
 }
 
 function getRoomList(socket, io) {
-  socket.on('get room list', () => {
-    io.emit('room list', cloneDeep(games).map((game) => game.id))
+  socket.on('get rooms', () => {
+    updateAvailableRooms(io)
   })
 }
 
-function getPlayerList(socket) {
-  socket.on('get player list', (data) => {
-    console.log(data)
-    socket.broadcast.to(`/#${data.socketId}`).emit('player list', games.filter((game) => game.id === data.gameId)[0].players)
+function getPlayerList(socket, io) {
+  socket.on('get players', (room) => {
+    updatePlayerListForRoom(room, io)
   })
 }
 
 export function addListenersToSocket(io) {
   io.on('connection', (socket) => {
-    // joinRoom(socket)
     createRoom(socket, io)
-    joinRoom(socket)
+    joinRoom(socket, io)
     socketGetRandomCard(socket, io)
     getRoomList(socket, io)
-    getPlayerList(socket)
+    getPlayerList(socket, io)
   })
 }

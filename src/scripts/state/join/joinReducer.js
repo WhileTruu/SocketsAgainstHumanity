@@ -2,31 +2,38 @@ import {
   JOINED_ROOM,
   IS_LOADING,
   IS_NOT_LOADING,
-} from './startAction'
+  UPDATE_ROOMS,
+} from './joinAction'
 
-export default function startReducer(state = { results: {}, isLoading: false }, result) {
+export default function join(state = { isLoading: false, rooms: [] }, result) {
   switch (result.type) {
+    case UPDATE_ROOMS: {
+      return {
+        rooms: result.rooms,
+        isLoading: false,
+      }
+    }
     case JOINED_ROOM: {
       return {
-        results: result.results,
+        rooms: state.rooms,
         isLoading: false,
       }
     }
     case IS_LOADING: {
       return {
-        results: state.results,
+        rooms: state.rooms,
         isLoading: true,
       }
     }
     case IS_NOT_LOADING: {
       return {
-        results: state.results,
+        rooms: state.rooms,
         isLoading: false,
       }
     }
     default:
       return {
-        results: state.results,
+        rooms: state.rooms,
         isLoading: state.isLoading,
       }
   }

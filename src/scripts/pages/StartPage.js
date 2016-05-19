@@ -1,8 +1,9 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
-import { createRoom, joinedRoom } from './startAction'
-
+import {
+  createNewRoom,
+} from '../state/join/joinAction'
 /* TODO:
  * 1. Fix problem with room names being weird
  * 2. Add some validation rules for nickname
@@ -13,8 +14,7 @@ import { createRoom, joinedRoom } from './startAction'
 export default class StartPage extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
-    startReducer: PropTypes.object.isRequired,
-    route: PropTypes.object.isRequired,
+    game: PropTypes.object.isRequired,
   }
 
   static contextTypes = {
@@ -26,21 +26,22 @@ export default class StartPage extends Component {
     this.state = {
       nickname: '',
     }
-    this.props.route.socket.on('joined room', (roomName) => {
-      console.log('yolo')
-      this.props.dispatch(joinedRoom(roomName))
-      this.context.router.push({ pathname: `rooms/${roomName}` })
-    })
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.game.room !== null && nextProps.game.room !== this.props.game.room) {
+      this.context.router.push({ pathname: `rooms/${nextProps.game.room}` })
+    }
   }
 
   onCreateRoom(event) {
     event.preventDefault()
-    this.props.dispatch(createRoom(this.props.route.socket.id, this.state.nickname, this.props.route.socket))
+    this.props.dispatch(createNewRoom(this.state.nickname))
   }
 
   onFindRoom(event) {
     event.preventDefault()
-    console.log('I want to join a room.')
+    this.context.router.push({ pathname: 'rooms' })
   }
 
   onNameChange(event) {
@@ -51,7 +52,8 @@ export default class StartPage extends Component {
   render() {
     return (
       <div>
-        <div className="create-room-container">
+        <div className="main-container">
+          <div className="component-heading">Sockets Against Humanity</div>
           <div>
             <input
               className="text-input"
@@ -63,18 +65,18 @@ export default class StartPage extends Component {
           </div>
           <div>
             <input
-              className="create-room-button"
+              className="main-button"
               type="button"
               onClick={::this.onCreateRoom}
-              value="create"
+              value="create room"
             />
           </div>
           <div>
             <input
-              className="join-room-button"
+              className="main-button"
               type="button"
               onClick={::this.onFindRoom}
-              value="join"
+              value="find room"
             />
           </div>
         </div>

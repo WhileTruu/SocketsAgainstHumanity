@@ -1,5 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 
+import Room from '../components/Room'
+
 export default class RoomList extends Component {
   static propTypes = {
     rooms: PropTypes.array.isRequired,
@@ -8,10 +10,10 @@ export default class RoomList extends Component {
   render() {
     const { rooms } = this.props
     return (
-      <div className="container">
+      <div>
         {rooms
           .map((room) => (
-            <div>{room}</div>
+            <Room room={room} />
           ))
         }
       </div>
