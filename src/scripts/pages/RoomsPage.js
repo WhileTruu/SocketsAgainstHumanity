@@ -9,18 +9,29 @@ class RoomsPage extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
     join: PropTypes.object.isRequired,
+    game: PropTypes.object.isRequired,
+  }
+
+  static contextTypes = {
+    router: PropTypes.object.isRequired,
   }
 
   componentWillMount() {
     getAvailableRooms()
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.game.room !== '' && nextProps.game.timestamp !== this.props.game.timestamp) {
+      this.context.router.push({ pathname: `rooms/${nextProps.game.room}` })
+    }
+  }
+
   render() {
-    const { rooms } = this.props.join
+    const { rooms, myName } = this.props.join
     return (
       <div className="main-container">
         <div className="component-heading">Available Rooms</div>
-        <RoomList rooms={rooms} />
+        <RoomList myName={myName} rooms={rooms} />
       </div>
     )
   }

@@ -20,19 +20,25 @@ class App extends Component {
   constructor(props) {
     super(props)
     const socket = new Socket()
-    socket.on('joined room', (data) => {
-      this.props.dispatch(receivedNewRoom(data.room))
+    socket.on('joined room', (room) => {
+      this.props.dispatch(receivedNewRoom(room))
       this.props.dispatch(joinedRoom())
     })
     socket.on('room was created', (room) => {
       this.props.dispatch(receivedNewRoom(room))
       this.props.dispatch(joinedRoom())
     })
-    socket.on('player list', (players) => {
+    socket.on('player list update', (players) => {
       this.props.dispatch(receivedPlayers(players))
     })
-    socket.on('available rooms', (rooms) => {
+    socket.on('available rooms update', (rooms) => {
       this.props.dispatch(updateAvailableRooms(rooms))
+    })
+    socket.on('create room error', (data) => {
+      console.log('CREATE ROOM ERROR', data)
+    })
+    socket.on('join room error', (data) => {
+      console.log('JOIN ROOM ERROR', data)
     })
   }
 

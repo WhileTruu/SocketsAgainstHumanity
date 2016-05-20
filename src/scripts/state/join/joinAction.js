@@ -2,6 +2,7 @@ export const IS_LOADING = 'IS_LOADING'
 export const IS_NOT_LOADING = 'IS_NOT_LOADING'
 export const JOINED_ROOM = 'JOINED_ROOM'
 export const UPDATE_ROOMS = 'UPDATE_ROOMS'
+export const CHANGE_NAME = 'CHANGE_NAME'
 
 import Socket from '../../Socket'
 
@@ -37,10 +38,17 @@ function updateAvailableRooms(rooms) {
   }
 }
 
+function changeName(myName) {
+  return dispatch => {
+    dispatch({ type: CHANGE_NAME, myName })
+  }
+}
+
 export {
   createNewRoom,
   joinRoom,
   joinedRoom,
   getAvailableRooms,
   updateAvailableRooms,
+  changeName,
 }

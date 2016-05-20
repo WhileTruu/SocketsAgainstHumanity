@@ -5,15 +5,16 @@ import Room from '../components/Room'
 export default class RoomList extends Component {
   static propTypes = {
     rooms: PropTypes.array.isRequired,
+    myName: PropTypes.string.isRequired,
   };
 
   render() {
-    const { rooms } = this.props
+    const { rooms, myName } = this.props
     return (
       <div>
         {rooms
           .map((room) => (
-            <Room room={room} />
+            <Room myName={myName} key={rooms.indexOf(room)} room={room} />
           ))
         }
       </div>

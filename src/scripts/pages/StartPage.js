@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 
 import {
   createNewRoom,
+  changeName,
 } from '../state/join/joinAction'
 /* TODO:
  * 1. Fix problem with room names being weird
@@ -15,17 +16,15 @@ export default class StartPage extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
     game: PropTypes.object.isRequired,
+    join: PropTypes.object.isRequired,
   }
 
   static contextTypes = {
     router: PropTypes.object.isRequired,
   }
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      nickname: '',
-    }
+  componentDidMount() {
+    if (this.props.join.myName !== '') this.refs.nickname.value = this.props.join.myName
   }
 
   componentWillReceiveProps(nextProps) {
@@ -36,7 +35,7 @@ export default class StartPage extends Component {
 
   onCreateRoom(event) {
     event.preventDefault()
-    this.props.dispatch(createNewRoom(this.state.nickname))
+    this.props.dispatch(createNewRoom(this.props.join.myName))
   }
 
   onFindRoom(event) {
@@ -45,7 +44,7 @@ export default class StartPage extends Component {
   }
 
   onNameChange(event) {
-    this.setState({ nickname: event.target.value })
+    this.props.dispatch(changeName(event.target.value))
   }
 
 
