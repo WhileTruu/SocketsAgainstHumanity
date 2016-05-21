@@ -3,6 +3,7 @@ export default class Game {
     this.state = 0
     this.id = id
     this.creatorNickname = creatorNickname
+    this.gameStarterId = creatorId
     this.players = [{ id: creatorId, nickname: creatorNickname, points: 0 }]
   }
 

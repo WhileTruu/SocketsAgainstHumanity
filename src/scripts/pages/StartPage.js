@@ -5,12 +5,6 @@ import {
   createNewRoom,
   changeName,
 } from '../state/join/joinAction'
-/* TODO:
- * 1. Fix problem with room names being weird
- * 2. Add some validation rules for nickname
- * 3. Make finding a room possible
- */
-
 
 export default class StartPage extends Component {
   static propTypes = {
@@ -28,8 +22,8 @@ export default class StartPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.game.room !== null && nextProps.game.room !== this.props.game.room) {
-      this.context.router.push({ pathname: `rooms/${nextProps.game.room}` })
+    if (nextProps.game.id !== null && nextProps.game.id !== this.props.game.id) {
+      this.context.router.push({ pathname: `rooms/${nextProps.game.id}` })
     }
   }
 

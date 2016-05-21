@@ -31,7 +31,11 @@ function removeEmptyGames() {
   games = games.filter((game) => game.players.length > 0)
 }
 
-function socketGetRandomCard(socket, io) {
+function sendGameUpdate(socket, io, id) {
+  io.to(id).emit('game update', games.filter(game => game.id === id)[0])
+}
+
+function onSocketGetRandomCard(socket, io) {
   socket.on('get random card', () => {
     console.log(`${socket.id} has asked for a random card`)
     getRandomCard()
@@ -52,11 +56,7 @@ function updateAvailableRooms(io) {
   })))
 }
 
-function updatePlayerListForRoom(room, io) {
-  io.to(room).emit('player list update', cloneDeep(games).filter((game) => game.id === room)[0].players)
-}
-
-function createRoom(socket, io) {
+function onCreateRoom(socket, io) {
   socket.on('create room', (data) => {
     const existingRoom = findPlayerRoom(socket.id)
     if (existingRoom !== null) {
@@ -70,17 +70,17 @@ function createRoom(socket, io) {
     const game = new Game(newRoomName, data.creator, socket.id)
     games.push(game)
 
-    io.to(socket.id).emit('room was created', newRoomName)
+    sendGameUpdate(socket, io, newRoomName)
     updateAvailableRooms(io)
   })
 }
 
-function joinRoom(socket, io) {
+function onJoinRoom(socket, io) {
   socket.on('join room', (data) => {
     const existingRoom = findPlayerRoom(socket.id)
     if (existingRoom !== null) {
       if (existingRoom === data.room) {
-        io.to(socket.id).emit('joined room', existingRoom)
+        sendGameUpdate(socket, io, existingRoom)
       } else {
         io.to(socket.id).emit('join room error', { error: 'You are already in another room.' })
       }
@@ -95,41 +95,47 @@ function joinRoom(socket, io) {
     }
     thisGame[0].addPlayer(data.player, socket.id)
     socket.join(thisGame[0].id)
-    io.to(socket.id).emit('joined room', thisGame[0].id)
-    updatePlayerListForRoom(thisGame[0].id, io)
+    sendGameUpdate(socket, io, thisGame[0].id)
   })
 }
 
-function getRoomList(socket, io) {
+function onGetRoomList(socket, io) {
   socket.on('get rooms', () => {
     updateAvailableRooms(io)
   })
 }
 
-function getPlayerList(socket, io) {
-  socket.on('get players', (room) => {
-    updatePlayerListForRoom(room, io)
+function exitRoom(socket, io) {
+  const room = findPlayerRoom(socket.id)
+  removePlayerFromRoom(socket.id)
+  removeEmptyGames()
+  socket.leave(room)
+  if (games.filter(game => game.id === room).length !== 0) sendGameUpdate(socket, io, room)
+  updateAvailableRooms(io)
+}
+
+function onExitRoom(socket, io) {
+  socket.on('exit room', () => {
+    exitRoom(socket, io)
   })
 }
 
-function exitRoom(socket, io) {
-  socket.on('exit room', () => {
-    const room = findPlayerRoom(socket.id)
-    removePlayerFromRoom(socket.id)
-    removeEmptyGames()
-    socket.leave(room)
-    if (games.filter(game => game.id === room).length !== 0) updatePlayerListForRoom(room, io)
-    updateAvailableRooms(io)
+function onGetGame(socket, io) {
+  socket.on('get game', id => {
+    sendGameUpdate(socket, io, id)
   })
 }
 
 export function addListenersToSocket(io) {
   io.on('connection', (socket) => {
-    createRoom(socket, io)
-    joinRoom(socket, io)
-    socketGetRandomCard(socket, io)
-    getRoomList(socket, io)
-    getPlayerList(socket, io)
-    exitRoom(socket, io)
+    onCreateRoom(socket, io)
+    onJoinRoom(socket, io)
+    onSocketGetRandomCard(socket, io)
+    onGetRoomList(socket, io)
+    onExitRoom(socket, io)
+    onGetGame(socket, io)
+    socket.on('disconnect', () => {
+      exitRoom(socket, io)
+    })
   })
 }

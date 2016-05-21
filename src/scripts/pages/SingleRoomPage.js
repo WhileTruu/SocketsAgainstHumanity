@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
 import PlayerList from '../components/PlayerList'
-import { getPlayersForRoom, exitRoom } from '../state/game/gameAction'
+import { exitRoom } from '../state/game/gameAction'
 
 class SingleRoomPage extends Component {
   static propTypes = {
@@ -15,21 +15,17 @@ class SingleRoomPage extends Component {
     router: PropTypes.object.isRequired,
   }
 
-  componentWillMount() {
-    getPlayersForRoom(this.props.game.room)
-  }
-
   onExitRoom() {
     exitRoom()
-    this.context.router.push({ pathname: '/' })
+    this.context.router.replace({ pathname: '/' })
   }
 
   render() {
-    const { players } = this.props.game
+    const { id, players } = this.props.game
     return (
       <div>
         <div className="main-container">
-          <div className="component-heading">{this.props.game.room}</div>
+          <div className="component-heading">{id}</div>
           <PlayerList players={players} />
           <div>
             <input

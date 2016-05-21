@@ -1,24 +1,25 @@
-export const RECEIVED_ROOM = 'JOINED_ROOM'
-export const RECEIVED_PLAYERS = 'RECEIVED_PLAYERS'
+export const RECEIVED_GAME = 'RECEIVED_GAME'
 export const EXIT_ROOM = 'EXIT_ROOM'
 
 import Socket from '../../Socket'
 
 const socket = new Socket()
 
-function receivedNewRoom(room) {
-  return dispatch => {
-    dispatch({ type: RECEIVED_ROOM, room, timestamp: Date.now() })
-  }
+function getGameUpdate(id) {
+  socket.emit('get game', id)
 }
 
-function getPlayersForRoom(room) {
-  socket.emit('get players', room)
-}
-
-function receivedPlayers(players) {
+function receivedGame(game) {
   return dispatch => {
-    dispatch({ type: RECEIVED_PLAYERS, players })
+    dispatch({
+      type: RECEIVED_GAME,
+      state: game.state,
+      id: game.id,
+      creatorNickname: game.creatorNickname,
+      gameStarterId: game.gameStarterId,
+      players: game.players,
+      timestamp: Date.now(),
+    })
   }
 }
 
@@ -30,8 +31,7 @@ function exitRoom() {
 }
 
 export {
-  receivedNewRoom,
-  getPlayersForRoom,
-  receivedPlayers,
+  receivedGame,
   exitRoom,
+  getGameUpdate,
 }

@@ -1,35 +1,52 @@
 import {
-  RECEIVED_ROOM,
-  RECEIVED_PLAYERS,
   EXIT_ROOM,
+  RECEIVED_GAME,
 } from './gameAction'
 
-export default function game(state = { room: '', players: [], timestamp: 0 }, result) {
+/*
+ * Game {
+ * state: 0,
+ * id: 'B15U',
+ * creatorNickname: 'marten',
+ * gameStarterId: '/#zQ6EOPgdCykLqvpoAAAB',
+ * players: [ { id: '/#zQ6EOPgdCykLqvpoAAAB', nickname: 'marten', points: 0 } ] }
+ */
+export default function game(
+  state = {
+    state: 0,
+    id: '',
+    creatorNickname: '',
+    gameStarterId: '',
+    players: [],
+    timestamp: 0 }
+  , result) {
   switch (result.type) {
     case EXIT_ROOM: {
       return {
-        room: '',
+        state: 0,
+        id: '',
+        creatorNickname: '',
+        gameStarterId: '',
         players: [],
         timestamp: 0,
       }
     }
-    case RECEIVED_ROOM: {
+    case RECEIVED_GAME: {
       return {
-        room: result.room,
-        players: state.players,
-        timestamp: result.timestamp,
-      }
-    }
-    case RECEIVED_PLAYERS: {
-      return {
-        room: state.room,
+        state: result.state,
+        id: result.id,
+        creatorNickname: result.creatorNickname,
+        gameStarterId: result.gameStarterId,
         players: result.players,
-        timestamp: state.timestamp,
+        timestamp: result.timestamp,
       }
     }
     default:
       return {
-        room: state.room,
+        state: state.state,
+        id: state.id,
+        creatorNickname: state.creatorNickname,
+        gameStarterId: state.gameStarterId,
         players: state.players,
         timestamp: state.timestamp,
       }

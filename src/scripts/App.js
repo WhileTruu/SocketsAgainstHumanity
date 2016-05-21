@@ -2,8 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
 import {
-  receivedNewRoom,
-  receivedPlayers,
+  receivedGame,
 } from './state/game/gameAction'
 import {
   joinedRoom,
@@ -20,16 +19,9 @@ class App extends Component {
   constructor(props) {
     super(props)
     const socket = new Socket()
-    socket.on('joined room', (room) => {
-      this.props.dispatch(receivedNewRoom(room))
+    socket.on('game update', (game) => {
+      this.props.dispatch(receivedGame(game))
       this.props.dispatch(joinedRoom())
-    })
-    socket.on('room was created', (room) => {
-      this.props.dispatch(receivedNewRoom(room))
-      this.props.dispatch(joinedRoom())
-    })
-    socket.on('player list update', (players) => {
-      this.props.dispatch(receivedPlayers(players))
     })
     socket.on('available rooms update', (rooms) => {
       this.props.dispatch(updateAvailableRooms(rooms))
