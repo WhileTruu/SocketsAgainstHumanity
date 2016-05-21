@@ -21,6 +21,30 @@ function getRandomCard() {
   })
 }
 
+function getWhiteCardCount() {
+  return new Promise((resolve, reject) => {
+    db.get('SELECT COUNT(id) as count FROM white_cards', (err, row) => {
+      if (err === null) {
+        resolve(row.count)
+      } else {
+        reject(err)
+      }
+    })
+  })
+}
+
+function getBlackCardCount() {
+  return new Promise((resolve, reject) => {
+    db.get('SELECT COUNT(id) as count FROM black_cards', (err, row) => {
+      if (err === null) {
+        resolve(row.count)
+      } else {
+        reject(err)
+      }
+    })
+  })
+}
+
 export {
   getRandomCard,
 }

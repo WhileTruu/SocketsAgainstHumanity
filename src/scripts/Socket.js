@@ -11,3 +11,7 @@ export default class Socket {
     return instance
   }
 }
+
+export function getSocketId() {
+  return instance.id
+}

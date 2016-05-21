@@ -30,7 +30,12 @@ function exitRoom() {
   }
 }
 
+function startGame(id) {
+  socket.emit('start game', id)
+}
+
 export {
+  startGame,
   receivedGame,
   exitRoom,
   getGameUpdate,

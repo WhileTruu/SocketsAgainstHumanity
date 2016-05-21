@@ -32,7 +32,11 @@ function removeEmptyGames() {
 }
 
 function sendGameUpdate(socket, io, id) {
-  io.to(id).emit('game update', games.filter(game => game.id === id)[0])
+  const thisGame = games.filter(game => game.id === id)[0]
+  if (thisGame.players.filter(player => player.id === thisGame.gameStarterId).length === 0) {
+    thisGame.gameStarterId = thisGame.players[0].id
+  }
+  io.to(id).emit('game update', thisGame)
 }
 
 function onSocketGetRandomCard(socket, io) {
@@ -126,6 +130,13 @@ function onGetGame(socket, io) {
   })
 }
 
+function onStartGame(socket, io) {
+  socket.on('start game', id => {
+    games.filter(game => game.id === id)[0].state = 1
+    sendGameUpdate(socket, io, id)
+  })
+}
+
 export function addListenersToSocket(io) {
   io.on('connection', (socket) => {
     onCreateRoom(socket, io)
@@ -134,8 +145,11 @@ export function addListenersToSocket(io) {
     onGetRoomList(socket, io)
     onExitRoom(socket, io)
     onGetGame(socket, io)
+    onStartGame(socket, io)
     socket.on('disconnect', () => {
       exitRoom(socket, io)
     })
   })
 }
+
+// Array.from(Array(100).keys()).map((num) => num + 1)

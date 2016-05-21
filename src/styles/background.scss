@@ -10,6 +10,7 @@ body {
   max-width: 500px;
   background-color: lightgrey;
   padding-bottom: 1rem;
+  padding-top: 1rem;
   margin-top: 1rem;
   border-radius: 0.5rem;
 }
@@ -42,5 +43,6 @@ body {
 
 .text-input {
   @extend .form-control;
+  margin-top: 1rem;
   color: #333;
 }

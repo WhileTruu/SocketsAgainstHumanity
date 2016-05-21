@@ -1,0 +1,31 @@
+.card-container {
+  background-color: #ccc;
+  border-radius: 0.5rem;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-align-content: center;
+  align-content: center;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.gamecard {
+  text-align: center;
+  font-size: 0.75rem;
+  width: 5rem;
+  height: 7rem;
+  margin: auto;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 0.3rem;
+  &.black-card {
+    background-color: black;
+    color: white;
+  }
+  &.white-card {
+    background-color: white;
+    color: black;
+  }
+}

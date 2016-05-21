@@ -1,0 +1,15 @@
+.score-container {
+  background-color: lightblue;
+  border-radius: 0.5rem;
+}
+
+.score-row {
+  display: flex;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+.score-item {
+  width: 100%;
+  text-align: center;
+}

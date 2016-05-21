@@ -32,7 +32,7 @@ function createDatabase() {
     db.each('SELECT id, text FROM white_cards', (err, row) => {
       console.log(`${row.id} :  ${row.text}`)
     })
-    db.get('SELECT COUNT(id) as penis FROM white_cards', (err, row) => {
+    db.get('SELECT COUNT(id) as count FROM white_cards', (err, row) => {
       console.log(row)
     })
   })
