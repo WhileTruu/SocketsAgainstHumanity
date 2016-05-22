@@ -45,8 +45,36 @@ function getBlackCardCount() {
   })
 }
 
+function getWhiteCardsById(cardIds) {
+  return new Promise((resolve, reject) => {
+    db.all(`SELECT * FROM white_cards WHERE id IN (${cardIds.join(', ')})`, (err, rows) => {
+      if (err === null) {
+        resolve(rows)
+      } else {
+        reject(err)
+      }
+    })
+  })
+}
+
+function getBlackCardById(cardId) {
+  return new Promise((resolve, reject) => {
+    db.get(`SELECT * FROM black_cards WHERE id = ${cardId}`, (err, row) => {
+      if (err === null) {
+        resolve(row)
+      } else {
+        reject(err)
+      }
+    })
+  })
+}
+
 export {
   getRandomCard,
+  getBlackCardCount,
+  getWhiteCardCount,
+  getWhiteCardsById,
+  getBlackCardById,
 }
 // createDatabase()
 // getRandomCard()

@@ -1,11 +1,14 @@
 import {
-  getRandomCard,
+  getWhiteCardsById,
+  getBlackCardById,
 } from './server/dbActions'
 import Game from './server/Game'
+import GameCards from './server/GameCards'
 import { getRandomName } from './server/utilities'
 import { cloneDeep } from 'lodash'
 
 let games = []
+const gameCards = {}
 
 function findPlayerRoom(socketId) {
   for (let i = 0; i < games.length; i++) {
@@ -26,9 +29,13 @@ function removePlayerFromRoom(socketId) {
     }
   }
 }
-
+// TODO: SEE IF THIS HAS MISTAKES
 function removeEmptyGames() {
-  games = games.filter((game) => game.players.length > 0)
+  games = games.filter((game) => {
+    if (game.players.length > 0) return true
+    delete gameCards[game.id]
+    return false
+  })
 }
 
 function sendGameUpdate(socket, io, id) {
@@ -37,19 +44,6 @@ function sendGameUpdate(socket, io, id) {
     thisGame.gameStarterId = thisGame.players[0].id
   }
   io.to(id).emit('game update', thisGame)
-}
-
-function onSocketGetRandomCard(socket, io) {
-  socket.on('get random card', () => {
-    console.log(`${socket.id} has asked for a random card`)
-    getRandomCard()
-      .then((response) => {
-        io.emit('get random card', response)
-      })
-      .catch((error) => {
-        io.emit('get random card', error)
-      })
-  })
 }
 
 function updateAvailableRooms(io) {
@@ -130,10 +124,42 @@ function onGetGame(socket, io) {
   })
 }
 
+function sendGameCardUpdate(socket, io, id) {
+  io.to(socket.id).emit('game card update', {
+    blackCard: gameCards[id].currentBlackCard,
+    whiteCards: gameCards[id].players.filter(player => player.id === socket.id)[0].cards,
+  })
+}
+
 function onStartGame(socket, io) {
   socket.on('start game', id => {
     games.filter(game => game.id === id)[0].state = 1
-    sendGameUpdate(socket, io, id)
+    gameCards[id] = new GameCards(id, 459, 89)
+    gameCards[id].addPlayers(games.filter(game => game.id === id)[0].players)
+    gameCards[id].updatePlayerCards()
+      .then(() => {
+        sendGameUpdate(socket, io, id)
+      })
+      .catch((str) => console.log(str))
+  })
+}
+
+function onGetGameCardUpdate(socket, io) {
+  socket.on('get game card update', (id) => {
+    sendGameCardUpdate(socket, io, id)
+  })
+}
+
+function onGetMyCards(socket, io) {
+  socket.on('get my white cards', (cardIdList) => {
+    getWhiteCardsById(cardIdList)
+      .then(result => io.to(socket.id).emit('white card text update', result))
+      .catch(error => console.log(error))
+  })
+  socket.on('get my black card', (cardId) => {
+    getBlackCardById(cardId)
+      .then(result => io.to(socket.id).emit('black card text update', result))
+      .catch(error => console.log(error))
   })
 }
 
@@ -141,13 +167,15 @@ export function addListenersToSocket(io) {
   io.on('connection', (socket) => {
     onCreateRoom(socket, io)
     onJoinRoom(socket, io)
-    onSocketGetRandomCard(socket, io)
     onGetRoomList(socket, io)
     onExitRoom(socket, io)
     onGetGame(socket, io)
     onStartGame(socket, io)
+    onGetMyCards(socket, io)
+    onGetGameCardUpdate(socket, io)
     socket.on('disconnect', () => {
       exitRoom(socket, io)
+      console.log(Object.keys(gameCards).length)
     })
   })
 }

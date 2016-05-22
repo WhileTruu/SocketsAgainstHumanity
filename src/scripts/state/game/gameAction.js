@@ -34,9 +34,14 @@ function startGame(id) {
   socket.emit('start game', id)
 }
 
+function getMyCards(roomId) {
+  socket.emit('get game card update', roomId)
+}
+
 export {
   startGame,
   receivedGame,
   exitRoom,
   getGameUpdate,
+  getMyCards,
 }
