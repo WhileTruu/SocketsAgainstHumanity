@@ -12,9 +12,13 @@ import {
 import {
   blackCardUpdate,
   whiteCardUpdate,
+  evaluationCardsUpdate,
+  toggleCardsEvaluated,
 } from './state/cards/cardAction'
 
 import Socket from './Socket'
+
+const socket = new Socket()
 
 class App extends Component {
   static propTypes = {
@@ -24,7 +28,6 @@ class App extends Component {
 
   constructor(props) {
     super(props)
-    const socket = new Socket()
     socket.on('game update', (game) => {
       this.props.dispatch(receivedGame(game))
       this.props.dispatch(joinedRoom())
@@ -35,9 +38,9 @@ class App extends Component {
     socket.on('available rooms update', (rooms) => {
       this.props.dispatch(updateAvailableRooms(rooms))
     })
-    socket.on('create room error', (data) => {
+    /* socket.on('create room error', (data) => {
       console.log('CREATE ROOM ERROR', data)
-    })
+    })*/
     socket.on('join room error', (data) => {
       console.log('JOIN ROOM ERROR', data)
     })
@@ -50,6 +53,13 @@ class App extends Component {
     })
     socket.on('black card text update', (data) => {
       this.props.dispatch(blackCardUpdate(data))
+    })
+    socket.on('evaluation cards update', (data) => {
+      this.props.dispatch(evaluationCardsUpdate(data))
+    })
+    socket.on('cards evaluated', () => {
+      console.log('evald')
+      this.props.dispatch(toggleCardsEvaluated())
     })
   }
 

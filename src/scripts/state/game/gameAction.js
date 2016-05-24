@@ -17,6 +17,7 @@ function receivedGame(game) {
       id: game.id,
       creatorNickname: game.creatorNickname,
       gameStarterId: game.gameStarterId,
+      evaluator: game.evaluator,
       players: game.players,
       timestamp: Date.now(),
     })

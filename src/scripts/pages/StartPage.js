@@ -1,12 +1,18 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
+import Alert from '../components/Alert'
+
 import {
   createNewRoom,
   changeName,
 } from '../state/join/joinAction'
 
-export default class StartPage extends Component {
+import Socket from '../Socket'
+
+const socket = new Socket()
+
+class StartPage extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
     game: PropTypes.object.isRequired,
@@ -17,13 +23,21 @@ export default class StartPage extends Component {
     router: PropTypes.object.isRequired,
   }
 
+  constructor(props) {
+    super(props)
+
+    socket.on('create room error', (data) => {
+      console.log('CREATE ROOM ERROR', data)
+    })
+  }
+
   componentDidMount() {
     if (this.props.join.myName !== '') this.refs.nickname.value = this.props.join.myName
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.game.id !== null && nextProps.game.id !== this.props.game.id) {
-      this.context.router.push({ pathname: `rooms/${nextProps.game.id}` })
+      this.context.router.push({ pathname: `room${nextProps.game.id}` })
     }
   }
 

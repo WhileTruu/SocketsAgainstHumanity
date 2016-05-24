@@ -4,12 +4,31 @@ import { connect } from 'react-redux'
 import ScoreBoard from '../components/ScoreBoard'
 import CardBoard from '../components/CardBoard'
 
-export default class GamePage extends Component {
+import { submitCardsForEvaluation } from '../state/cards/cardAction'
+
+import { getSocketId } from '../Socket'
+
+class GamePage extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
     route: PropTypes.object.isRequired,
     game: PropTypes.object.isRequired,
     cards: PropTypes.object.isRequired,
+  }
+
+  static contextTypes = {
+    router: PropTypes.object.isRequired,
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log('evaluator: ', nextProps.game.evaluator.id, `/#${getSocketId()}`)
+    if (nextProps.game.evaluator.id === `/#${getSocketId()}`) this.context.router.replace({ pathname: '/scoringpage' })
+  }
+
+  submitCards() {
+    console.log(this.props.cards.pickedCards)
+    submitCardsForEvaluation(this.props.cards.pickedCards.map(card => this.props.cards.whiteCards.filter(wcard => wcard.id === card)[0]))
+    this.context.router.replace({ pathname: '/scoringpage' })
   }
 
   render() {
@@ -41,6 +60,14 @@ export default class GamePage extends Component {
             cards={whiteCards}
           />
         </div> : ''}
+        <div>
+          <input
+            className="main-button"
+            type="button"
+            onClick={::this.submitCards}
+            value="submit cards"
+          />
+        </div>
         <ScoreBoard players={players} />
       </div>
     )

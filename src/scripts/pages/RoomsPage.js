@@ -22,7 +22,7 @@ class RoomsPage extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.game.id !== '' && nextProps.game.timestamp !== this.props.game.timestamp) {
-      this.context.router.push({ pathname: `rooms/${nextProps.game.id}` })
+      this.context.router.push({ pathname: `room${nextProps.game.id}` })
     }
   }
 

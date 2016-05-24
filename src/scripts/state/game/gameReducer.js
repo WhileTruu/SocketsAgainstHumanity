@@ -17,6 +17,7 @@ export default function game(
     id: '',
     creatorNickname: '',
     gameStarterId: '',
+    evaluator: {},
     players: [],
     timestamp: 0 }
   , result) {
@@ -27,6 +28,7 @@ export default function game(
         id: '',
         creatorNickname: '',
         gameStarterId: '',
+        evaluator: state.evaluator,
         players: [],
         timestamp: 0,
       }
@@ -37,6 +39,7 @@ export default function game(
         id: result.id,
         creatorNickname: result.creatorNickname,
         gameStarterId: result.gameStarterId,
+        evaluator: result.evaluator,
         players: result.players,
         timestamp: result.timestamp,
       }
@@ -47,6 +50,7 @@ export default function game(
         id: state.id,
         creatorNickname: state.creatorNickname,
         gameStarterId: state.gameStarterId,
+        evaluator: state.evaluator,
         players: state.players,
         timestamp: state.timestamp,
       }

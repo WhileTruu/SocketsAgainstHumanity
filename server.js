@@ -14,13 +14,13 @@ if (process.argv[2] === 'develop') {
   const webpackMiddleware = require('webpack-dev-middleware')
   const webpackHotMiddleware = require('webpack-hot-middleware')
   const compiler = webpack(config)
+  app.use(webpackHotMiddleware(compiler))
   app.use(webpackMiddleware(compiler, {
     noInfo: false,
     stats: {
       colors: true,
     },
   }))
-  app.use(webpackHotMiddleware(compiler))
 } else {
   const staticPath = path.join(__dirname, 'dist')
   app.use(express.static(staticPath))

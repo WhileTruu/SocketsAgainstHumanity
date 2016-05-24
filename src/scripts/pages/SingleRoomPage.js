@@ -18,7 +18,7 @@ class SingleRoomPage extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.game.state === 1) {
-      this.context.router.replace({ pathname: `/rooms/${nextProps.game.id}/game` })
+      this.context.router.replace({ pathname: `/game${nextProps.game.id}` })
     }
   }
 

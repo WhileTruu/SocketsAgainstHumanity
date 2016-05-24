@@ -19,6 +19,15 @@ function findPlayerRoom(socketId) {
   return null
 }
 
+function getPlayerRoomObject(socketId) {
+  for (let i = 0; i < games.length; i++) {
+    for (let j = 0; j < games[i].players.length; j++) {
+      if (games[i].players[j].id === socketId) return games[i]
+    }
+  }
+  return null
+}
+
 function removePlayerFromRoom(socketId) {
   for (let i = 0; i < games.length; i++) {
     for (let j = 0; j < games[i].players.length; j++) {
@@ -144,6 +153,17 @@ function onStartGame(socket, io) {
   })
 }
 
+function onSubmitCardsForEvaluation(socket, io) {
+  socket.on('submit cards', cards => {
+    const room = findPlayerRoom(socket.id)
+    gameCards[room]
+      .updateEvaluationCards(socket.id, cards)
+      .then(io.to(room).emit('evaluation cards update', gameCards[room].evaluationCards))
+      .catch(error => console.log(error))
+    // console.log(gameCards[findPlayerRoom(socket.id)])
+  })
+}
+
 function onGetGameCardUpdate(socket, io) {
   socket.on('get game card update', (id) => {
     sendGameCardUpdate(socket, io, id)
@@ -163,6 +183,24 @@ function onGetMyCards(socket, io) {
   })
 }
 
+function onAddPointToPlayer(socket, io) {
+  socket.on('add point', player => {
+    console.log('received add point')
+    const room = getPlayerRoomObject(socket.id)
+    room.addPoint(player)
+    gameCards[room.id].resetEvaluationCards()
+    room.nextEvaluator()
+    gameCards[room.id].updatePlayerCards()
+      .then(() => {
+        // TODO: I think i know the problem. It's the countrer
+        sendGameUpdate(socket, io, room.id)
+        sendGameCardUpdate(socket, io, room.id)
+        io.to(room.id).emit('cards evaluated')
+      })
+      .catch(error => console.log(error))
+  })
+}
+
 export function addListenersToSocket(io) {
   io.on('connection', (socket) => {
     onCreateRoom(socket, io)
@@ -173,6 +211,9 @@ export function addListenersToSocket(io) {
     onStartGame(socket, io)
     onGetMyCards(socket, io)
     onGetGameCardUpdate(socket, io)
+    onSubmitCardsForEvaluation(socket, io)
+    // TODO: MAKE SURE ADDPOINTSTUFF IS TOLERAb`l
+    onAddPointToPlayer(socket, io)
     socket.on('disconnect', () => {
       exitRoom(socket, io)
       console.log(Object.keys(gameCards).length)
