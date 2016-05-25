@@ -1,31 +1,116 @@
+.game-container {
+  @extend .container-fluid;
+  max-width: 793px;
+  background-color: lightgrey;
+  padding: 0 0 1rem 0;
+  margin-top: 1rem;
+  border-radius: 0.5rem;
+}
+
+.game-items-container {
+  margin-top: -1rem;
+  padding: 0 1rem 0 1rem;
+}
+
 .card-container {
-  background-color: #ccc;
+  // background-color: #ccc;
   border-radius: 0.5rem;
   display: -webkit-flex;
   display: flex;
-  -webkit-flex-wrap: wrap;
-  flex-wrap: wrap;
+
   -webkit-align-content: center;
   align-content: center;
-  padding-top: 0.5rem;
   padding-bottom: 0.5rem;
+  overflow-x: scroll;
+  -webkit-overflow-scrolling: touch;
+  // height: 250px;
+  & > :last-child {
+    margin-left: -0.75rem;
+  }
+  & > :first-child {
+    margin-left: 1.25rem;
+  }
+}
+
+.black-card-container {
+  padding: 0.5rem;
 }
 
 .gamecard {
-  text-align: center;
+  flex: none;
+  text-align: left;
   font-size: 0.75rem;
-  width: 5rem;
-  height: 7rem;
-  margin: auto;
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
+  font-weight: bold;
+  padding: 0.5rem;
+  width: 125px;
+  height: 175px;
+  margin: 1rem;
   border-radius: 0.3rem;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  position: relative;
+  &:hover, :focus {
+    transform: scale(1.05);
+    transition: all .1s ease-in-out;
+  }
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;
   &.black-card {
+    margin: 1rem auto 1rem auto;
     background-color: black;
     color: white;
   }
   &.white-card {
     background-color: white;
     color: black;
+  }
+  &.picked-card {
+    box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.5), 0 6px 20px 0 rgba(0, 0, 0, 0.3);
+  }
+}
+
+.padding-element {
+  padding: 0.5rem;
+}
+
+.head-buttons-container {
+  width: 100%;
+  padding: 0 1rem 0 1rem;
+}
+
+.pick-count {
+  text-align: right;
+  width: 109px;
+  position: absolute;
+  bottom: 0.5rem;
+}
+
+@media screen and (max-width: 793px) {
+  .game-container {
+    margin-top: -1rem;
+    background-color: #fff;
+  }
+  .white-card {
+    border: 1px;
+    border-style: solid;
+    border-color: #aaa;
+    //background-color: #ffb !important;
+  }
+
+  .scores-container {
+    padding: 1rem 1rem 0 1rem;
+  }
+
+  .head-buttons-container {
+    display: inline-flex;
+    & > :last-child {
+      margin-left: 0.5rem;
+    }
+    & > :first-child {
+      margin-right: 0.5rem;
+    }
   }
 }

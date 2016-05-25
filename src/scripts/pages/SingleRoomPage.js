@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
 import PlayerList from '../components/PlayerList'
+import Alert from '../components/Alert'
 import { exitRoom, startGame } from '../state/game/gameAction'
 import { getSocketId } from '../Socket'
 
@@ -16,7 +17,15 @@ class SingleRoomPage extends Component {
     router: PropTypes.object.isRequired,
   }
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      error: '',
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
+    this.setState({ error: '' })
     if (nextProps.game.state === 1) {
       this.context.router.replace({ pathname: `/game${nextProps.game.id}` })
     }
@@ -28,10 +37,15 @@ class SingleRoomPage extends Component {
   }
 
   onStartGame(id) {
+    if (this.props.game.players.length < 2) {
+      this.setState({ error: 'You need at least two players.' })
+      return
+    }
     startGame(id)
   }
 
   render() {
+    const { error } = this.state
     const mySocketId = `/#${getSocketId()}`
     const { id, players, gameStarterId } = this.props.game
     return (
@@ -44,7 +58,7 @@ class SingleRoomPage extends Component {
               <input
                 className="main-button"
                 type="button"
-                onClick={() => startGame(id)}
+                onClick={() => this.onStartGame(id)}
                 value="start game"
               />
             </div> : ''
@@ -57,6 +71,7 @@ class SingleRoomPage extends Component {
               value="exit room"
             />
           </div>
+          {error === '' ? '' : <Alert alertType="warning" message={error} />}
         </div>
       </div>
     )

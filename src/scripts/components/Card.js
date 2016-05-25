@@ -10,31 +10,33 @@ export default class Card extends Component {
     id: PropTypes.number.isRequired,
     pickedCards: PropTypes.array.isRequired,
     dispatch: PropTypes.func.isRequired,
+    pick: PropTypes.number.isRequired,
   };
 
   onCardClick() {
-    const { type, id } = this.props
+    const { type, id, pick } = this.props
     if (type === 'black') return
     const indexOfPickedCard = this.props.pickedCards.indexOf(id)
     const pickedCards = this.props.pickedCards
     if (indexOfPickedCard > -1) {
-      pickedCards.splice(pickedCards.indexOf(id, 1))
+      pickedCards.splice(pickedCards.indexOf(id), 1)
       this.props.dispatch(pickedCardsUpdate(pickedCards))
-    } else {
+    } else if (pickedCards.length < pick) {
       pickedCards.push(id)
       this.props.dispatch(pickedCardsUpdate(pickedCards))
     }
   }
 
+  createMarkup(text) { return { __html: text } }
+
   render() {
-    const { type, text } = this.props
+    const { type, text, id, pickedCards } = this.props
     return (
       <div
-        className={`gamecard ${type}-card`}
+        className={`gamecard ${type}-card${pickedCards.indexOf(id) < 0 ? '' : ' picked-card'}`}
         onClick={::this.onCardClick}
       >
-        <div className="cardText">
-          {text}
+        <div className="cardText" dangerouslySetInnerHTML={this.createMarkup(text)}>
         </div>
       </div>
     )

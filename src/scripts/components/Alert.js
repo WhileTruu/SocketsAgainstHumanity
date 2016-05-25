@@ -3,13 +3,13 @@ import React, { Component, PropTypes } from 'react'
 export default class Alert extends Component {
   static propTypes = {
     message: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequried,
+    alertType: PropTypes.string.isRequired,
   };
 
   render() {
-    const { message, type } = this.props
+    const { message, alertType } = this.props
     return (
-      <div className={`sah-alert --${type}`}>
+      <div className={`sah-alert --${alertType}`}>
         {message}
       </div>
     )

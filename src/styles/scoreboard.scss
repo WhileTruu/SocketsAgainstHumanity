@@ -1,5 +1,5 @@
 .score-container {
-  background-color: lightblue;
+  background-color: lightgray;
   border-radius: 0.5rem;
 }
 
@@ -12,4 +12,10 @@
 .score-item {
   width: 100%;
   text-align: center;
+}
+
+@media screen and (max-width: 793px) {
+  .score-container {
+    background-color: #fff;
+  }
 }

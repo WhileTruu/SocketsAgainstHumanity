@@ -8,10 +8,6 @@ import {
   changeName,
 } from '../state/join/joinAction'
 
-import Socket from '../Socket'
-
-const socket = new Socket()
-
 class StartPage extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
@@ -25,10 +21,9 @@ class StartPage extends Component {
 
   constructor(props) {
     super(props)
-
-    socket.on('create room error', (data) => {
-      console.log('CREATE ROOM ERROR', data)
-    })
+    this.state = {
+      error: '',
+    }
   }
 
   componentDidMount() {
@@ -36,6 +31,7 @@ class StartPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    this.setState({ error: nextProps.join.error })
     if (nextProps.game.id !== null && nextProps.game.id !== this.props.game.id) {
       this.context.router.push({ pathname: `room${nextProps.game.id}` })
     }
@@ -43,20 +39,37 @@ class StartPage extends Component {
 
   onCreateRoom(event) {
     event.preventDefault()
-    this.props.dispatch(createNewRoom(this.props.join.myName))
+    if (this.validateName()) {
+      this.props.dispatch(createNewRoom(this.props.join.myName))
+    }
   }
 
   onFindRoom(event) {
     event.preventDefault()
-    this.context.router.push({ pathname: 'rooms' })
+    if (this.validateName()) {
+      this.context.router.push({ pathname: 'rooms' })
+    }
   }
 
   onNameChange(event) {
+    this.setState({ error: '' })
     this.props.dispatch(changeName(event.target.value))
   }
 
+  validateName() {
+    if (this.props.join.myName.length < 1) {
+      this.setState({ error: 'Please enter a name.' })
+      return false
+    }
+    if (this.props.join.myName.length > 20) {
+      this.setState({ error: 'Please choose a shorter name.' })
+      return false
+    }
+    return true
+  }
 
   render() {
+    const { error } = this.state
     return (
       <div>
         <div className="main-container">
@@ -67,7 +80,7 @@ class StartPage extends Component {
               type="text"
               ref="nickname"
               onChange={::this.onNameChange}
-              placeholder="enter your nickname"
+              placeholder="enter your name"
             />
           </div>
           <div>
@@ -86,6 +99,7 @@ class StartPage extends Component {
               value="find room"
             />
           </div>
+          {error === '' ? '' : <Alert alertType="warning" message={error} />}
         </div>
       </div>
     )

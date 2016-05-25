@@ -1,0 +1,14 @@
+.sah-alert {
+  @extend .alert;
+  &.--warning {
+    @extend .alert-warning;
+  }
+  &.--danger {
+    @extend .alert-danger;
+  }
+  &.--info {
+    @extend .alert-info;
+  }
+  margin-top: 1rem;
+  margin-bottom: 0;
+}

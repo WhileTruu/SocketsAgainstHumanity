@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
 import RoomList from '../components/RoomList'
-
+import Alert from '../components/Alert'
 import { getAvailableRooms } from '../state/join/joinAction'
 
 class RoomsPage extends Component {
@@ -26,12 +26,35 @@ class RoomsPage extends Component {
     }
   }
 
+  onBackPress() {
+    this.context.router.push({ pathname: '/' })
+  }
+
   render() {
     const { rooms, myName } = this.props.join
     return (
       <div className="main-container">
-        <div className="component-heading">Available Rooms</div>
-        <RoomList myName={myName} rooms={rooms} />
+        <div className="component-heading">Rooms</div>
+        {
+          rooms.length > 0 ?
+          <div>
+            <div className="rooms-info-bar">
+              <div className="room-item">Room ID</div>
+              <div className="room-item">Creator</div>
+              <div className="room-item">Players</div>
+            </div>
+            <RoomList myName={myName} rooms={rooms} />
+          </div> :
+          <Alert alertType="info" message="No rooms available. You could create one." />
+        }
+        <div>
+          <input
+            className="main-button"
+            type="button"
+            onClick={::this.onBackPress}
+            value="back"
+          />
+        </div>
       </div>
     )
   }

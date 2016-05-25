@@ -3,6 +3,7 @@ export const IS_NOT_LOADING = 'IS_NOT_LOADING'
 export const JOINED_ROOM = 'JOINED_ROOM'
 export const UPDATE_ROOMS = 'UPDATE_ROOMS'
 export const CHANGE_NAME = 'CHANGE_NAME'
+export const ERROR = 'ERROR'
 
 import Socket from '../../Socket'
 
@@ -25,6 +26,12 @@ function createNewRoom(creator) {
   socket.emit('create room', { creator })
   return dispatch => {
     dispatch({ type: IS_LOADING })
+  }
+}
+
+function createNewRoomError(error) {
+  return dispatch => {
+    dispatch({ type: ERROR, error })
   }
 }
 
@@ -51,4 +58,5 @@ export {
   getAvailableRooms,
   updateAvailableRooms,
   changeName,
+  createNewRoomError,
 }

@@ -32,7 +32,7 @@ app.get('*', (request, response) => {
   response.sendFile(path.join(__dirname, 'build/index.html'))
 })
 
-http.listen(1337, (error) => {
+http.listen(7331, (error) => {
   if (error) {
     console.log(error)
     return

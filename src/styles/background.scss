@@ -45,4 +45,14 @@ body {
   @extend .form-control;
   margin-top: 1rem;
   color: #333;
+  border-color: gray;
+}
+
+@media screen and (max-width: 793px) {
+  body {
+    background-color: transparent;
+  }
+  .main-container {
+    background-color: #fff;
+  }
 }

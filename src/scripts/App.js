@@ -8,6 +8,7 @@ import {
 import {
   joinedRoom,
   updateAvailableRooms,
+  createNewRoomError,
 } from './state/join/joinAction'
 import {
   blackCardUpdate,
@@ -19,6 +20,10 @@ import {
 import Socket from './Socket'
 
 const socket = new Socket()
+
+/* window.onbeforeunload = () => {
+  return 'Are you sure you want to leave?'
+}*/
 
 class App extends Component {
   static propTypes = {
@@ -38,9 +43,9 @@ class App extends Component {
     socket.on('available rooms update', (rooms) => {
       this.props.dispatch(updateAvailableRooms(rooms))
     })
-    /* socket.on('create room error', (data) => {
-      console.log('CREATE ROOM ERROR', data)
-    })*/
+    socket.on('create room error', (data) => {
+      this.props.dispatch(createNewRoomError(data.error))
+    })
     socket.on('join room error', (data) => {
       console.log('JOIN ROOM ERROR', data)
     })
@@ -58,12 +63,13 @@ class App extends Component {
       this.props.dispatch(evaluationCardsUpdate(data))
     })
     socket.on('cards evaluated', () => {
-      console.log('evald')
+      console.log('Cards have been evaluated.')
       this.props.dispatch(toggleCardsEvaluated())
     })
   }
 
   render() {
+    console.log(socket)
     const { children } = this.props
     return (
       <div>

@@ -33,6 +33,15 @@ function removePlayerFromRoom(socketId) {
     for (let j = 0; j < games[i].players.length; j++) {
       if (games[i].players[j].id === socketId) {
         games[i].players.splice(j, 1)
+        const gameCardxxx = gameCards[games[i].id]
+        if (gameCardxxx) {
+          const gamePlayers = gameCardxxx.players
+          for (let k = 0; k < gamePlayers.length; k++) {
+            if (gamePlayers[k] === socketId) {
+              gamePlayers.splice(k, 1)
+            }
+          }
+        }
         return
       }
     }
@@ -56,11 +65,12 @@ function sendGameUpdate(socket, io, id) {
 }
 
 function updateAvailableRooms(io) {
-  io.emit('available rooms update', cloneDeep(games).map((game) => ({
-    id: game.id,
-    playerCount: game.players.length,
-    creator: game.creatorNickname,
-  })))
+  io.emit('available rooms update', cloneDeep(games)
+    .map((game) => ({
+      id: game.id,
+      playerCount: game.players.length,
+      creator: game.creatorNickname,
+    })))
 }
 
 function onCreateRoom(socket, io) {
@@ -100,6 +110,10 @@ function onJoinRoom(socket, io) {
       io.to(socket.id).emit('join room error', { error: 'This room does not exist anymore' })
       return
     }
+    if (thisGame[0].state > 0) {
+      io.to(socket.id).emit('join room error', { error: 'Cannot join an ongoing game' })
+      return
+    }
     thisGame[0].addPlayer(data.player, socket.id)
     socket.join(thisGame[0].id)
     sendGameUpdate(socket, io, thisGame[0].id)
@@ -112,8 +126,29 @@ function onGetRoomList(socket, io) {
   })
 }
 
+function sendGameCardUpdate(socket, io, id) {
+  io.to(socket.id).emit('game card update', {
+    blackCard: gameCards[id].currentBlackCard,
+    whiteCards: gameCards[id].players.filter(player => player.id === socket.id)[0].cards,
+  })
+}
+
 function exitRoom(socket, io) {
   const room = findPlayerRoom(socket.id)
+  const playerRoom = getPlayerRoomObject(socket.id)
+  if (playerRoom && playerRoom.state === 2) {
+    playerRoom.state = 1
+    gameCards[room].resetEvaluationCards()
+    playerRoom.nextEvaluator()
+    gameCards[room].updatePlayerCards()
+      .then(() => {
+        // TODO: I think i know the problem. It's the countrer
+        sendGameUpdate(socket, io, room)
+        sendGameCardUpdate(socket, io, room)
+        io.to(room).emit('cards evaluated')
+      })
+      .catch(error => console.log(error))
+  }
   removePlayerFromRoom(socket.id)
   removeEmptyGames()
   socket.leave(room)
@@ -133,13 +168,6 @@ function onGetGame(socket, io) {
   })
 }
 
-function sendGameCardUpdate(socket, io, id) {
-  io.to(socket.id).emit('game card update', {
-    blackCard: gameCards[id].currentBlackCard,
-    whiteCards: gameCards[id].players.filter(player => player.id === socket.id)[0].cards,
-  })
-}
-
 function onStartGame(socket, io) {
   socket.on('start game', id => {
     games.filter(game => game.id === id)[0].state = 1
@@ -156,9 +184,14 @@ function onStartGame(socket, io) {
 function onSubmitCardsForEvaluation(socket, io) {
   socket.on('submit cards', cards => {
     const room = findPlayerRoom(socket.id)
+    const playerRoom = getPlayerRoomObject(socket.id)
+    playerRoom.state = 2
     gameCards[room]
       .updateEvaluationCards(socket.id, cards)
-      .then(io.to(room).emit('evaluation cards update', gameCards[room].evaluationCards))
+      .then(() => {
+        sendGameUpdate(socket, io, room)
+        io.to(room).emit('evaluation cards update', gameCards[room].evaluationCards)
+      })
       .catch(error => console.log(error))
     // console.log(gameCards[findPlayerRoom(socket.id)])
   })
@@ -187,6 +220,7 @@ function onAddPointToPlayer(socket, io) {
   socket.on('add point', player => {
     console.log('received add point')
     const room = getPlayerRoomObject(socket.id)
+    room.state = 1
     room.addPoint(player)
     gameCards[room.id].resetEvaluationCards()
     room.nextEvaluator()
@@ -215,7 +249,7 @@ export function addListenersToSocket(io) {
     // TODO: MAKE SURE ADDPOINTSTUFF IS TOLERAb`l
     onAddPointToPlayer(socket, io)
     socket.on('disconnect', () => {
-      exitRoom(socket, io)
+      if (findPlayerRoom(socket.id)) exitRoom(socket, io)
       console.log(Object.keys(gameCards).length)
     })
   })
