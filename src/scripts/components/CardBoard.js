@@ -23,7 +23,6 @@ export default class CardBoard extends Component {
             pick={pick}
           />
         )}
-        <div className="padding-element"></div>
       </div>
     )
   }

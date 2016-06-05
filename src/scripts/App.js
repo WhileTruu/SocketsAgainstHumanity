@@ -69,7 +69,6 @@ class App extends Component {
   }
 
   render() {
-    console.log(socket)
     const { children } = this.props
     return (
       <div>

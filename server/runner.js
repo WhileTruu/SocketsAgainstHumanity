@@ -1,2 +1,2 @@
 require('babel-register')
-require('./dbActions')
+require('./dbCreationActions')

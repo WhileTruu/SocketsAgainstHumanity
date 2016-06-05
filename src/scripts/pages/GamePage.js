@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import ScoreBoard from '../components/ScoreBoard'
 import CardBoard from '../components/CardBoard'
-import BlackCard from '../components/BlackCard'
+import Card from '../components/Card'
 import { submitCardsForEvaluation } from '../state/cards/cardAction'
 import { exitRoom } from '../state/game/gameAction'
 
@@ -59,29 +59,34 @@ class GamePage extends Component {
     }
     return (
       <div className="game-container">
-        <div className="head-buttons-container">
-          <input
-            className="main-button"
-            type="button"
-            onClick={::this.onExitRoom}
-            value="exit room"
-          />
-          <input
-            className="main-button"
-            type="button"
-            onClick={::this.toggleScores}
-            value="scores"
-            onMouseUp={event => event.target.blur()}
-            onTouchEnd={event => event.target.blur()}
-          />
-        </div>
-        {whiteCards.length !== 0 && blackCard !== {} && !this.state.scoreToggle ?
+        {whiteCards.length !== 0 && blackCard !== {} ?
         <div>
           <div>
-            <BlackCard
-              text={blackCard.text}
-              pick={blackCard.pick}
-            />
+            <div className="game-top-container">
+              <div
+                className="exit-button"
+                type="button"
+                onClick={::this.onExitRoom}
+              >
+              <i className="fa fa-chevron-left" />
+              <span> exit</span>
+              </div>
+              <Card
+                type="black"
+                pickedCards={[]}
+                id={0}
+                text={blackCard.text}
+                pick={blackCard.pick}
+              />
+              <input
+                className="game-button"
+                type="button"
+                onClick={::this.toggleScores}
+                value="scores"
+                onMouseUp={event => event.target.blur()}
+                onTouchEnd={event => event.target.blur()}
+              />
+            </div>
             <CardBoard
               className="white-card-board"
               type="white"
@@ -107,6 +112,7 @@ class GamePage extends Component {
           <ScoreBoard players={players} />
          </div>
         }
+        <ScoreBoard open={this.state.scoreToggle} players={players} />
       </div>
     )
   }

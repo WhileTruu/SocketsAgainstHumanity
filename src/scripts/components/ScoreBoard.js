@@ -3,12 +3,13 @@ import React, { PropTypes, Component } from 'react'
 export default class ScoreBoard extends Component {
   static propTypes = {
     players: PropTypes.array.isRequired,
+    open: PropTypes.bool.isRequired,
   };
 
   render() {
-    const { players } = this.props
+    const { players, open } = this.props
     return (
-      <div className="score-container">
+      <div className={`score-container${open ? ' open' : ' closed'}`}>
         <div className="score-row">
           <div className="score-item">Player</div>
           <div className="score-item">Score</div>

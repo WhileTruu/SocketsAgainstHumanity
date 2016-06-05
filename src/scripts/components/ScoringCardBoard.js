@@ -20,10 +20,11 @@ export default class ScoringCardBoard extends Component {
   }
 
   render() {
-    const { cards } = this.props
+    const { cards, evaluator } = this.props
+    const isEvaluator = evaluator.id === `/#${getSocketId()}`
     return (
       <div
-        className="card-container"
+        className={`scoring-card-container${isEvaluator ? ' --effects' : ''}`}
         onClick={::this.onCardClick}
       >
         {cards.length <= 0 ? '' : cards.map(card =>
@@ -34,7 +35,6 @@ export default class ScoringCardBoard extends Component {
             pick={card.pick}
           />
         )}
-        <div className="padding-element"></div>
       </div>
     )
   }

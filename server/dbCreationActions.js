@@ -1,6 +1,6 @@
 import sqlite3 from 'sqlite3'
-import baseCards from './textFiles/Base.json'
-const db = new (sqlite3.verbose()).Database('myDatabase.sqlite3')
+import baseCards from './textFiles/Expansions.json'
+const db = new (sqlite3.verbose()).Database('expandedDB.sqlite3')
 
 function createWhiteCardTable(database) {
   database.run('CREATE TABLE white_cards (id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT)')
@@ -23,7 +23,9 @@ function addWhiteCards(database, whiteCards) {
 }
 
 function createDatabase() {
+  console.log('ssa')
   db.serialize(() => {
+    console.log('ss')
     createWhiteCardTable(db)
     createBlackCardTable(db)
     addBlackCards(db, baseCards.blackCards)

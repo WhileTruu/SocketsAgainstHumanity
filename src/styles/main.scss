@@ -1,4 +1,6 @@
 @import "~bootstrap/scss/bootstrap-flex.scss";
+$fa-font-path: "~font-awesome/fonts";
+@import "~font-awesome/scss/font-awesome.scss";
 @import "background.scss";
 @import "singleroom.scss";
 @import "scoreboard.scss";

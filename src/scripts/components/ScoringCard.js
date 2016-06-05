@@ -12,9 +12,8 @@ export default class ScoringCard extends Component {
   render() {
     const { text, pick, type } = this.props
     return (
-      <div className="black-card-container">
         <div
-          className={`gamecard ${type}-card`}
+          className={`scoring-card ${type}-card`}
         >
           <div className="cardText" dangerouslySetInnerHTML={this.createMarkup(text)}>
           </div>
@@ -24,7 +23,6 @@ export default class ScoringCard extends Component {
             </div>
           }
         </div>
-      </div>
     )
   }
 }

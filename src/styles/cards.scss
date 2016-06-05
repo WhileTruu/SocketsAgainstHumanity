@@ -7,50 +7,100 @@
   border-radius: 0.5rem;
 }
 
+.game-button {
+  @extend .btn;
+  @extend .btn-primary;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  width: 100%;
+  background-color: transparent;
+  border-color: transparent;
+  margin: 0.5rem;
+  color: #333;
+  &:hover {
+    background-color: darkgray;
+    border-color: transparent;
+    color: #333;
+  }
+  &:active {
+    background-color: #777 !important;
+    border-color: transparent !important;
+    color: #333 !important;
+  }
+  &:focus {
+    background-color: #777 !important;
+    border-color: transparent !important;
+    color: #333 !important;
+    outline: none !important;
+  }
+}
+
+.exit-button {
+  @extend .game-button;
+  text-align: left;
+  color: #35f;
+}
+
+.game-button span {
+  padding-left: 0.5rem;
+  padding-bottom: 0.1rem;
+}
+
+.game-top-container {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row; /* works with row or column */
+  flex-direction: row;
+  -webkit-align-items: flex-start;
+  align-items: flex-start;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
 .game-items-container {
-  margin-top: -1rem;
   padding: 0 1rem 0 1rem;
 }
 
 .card-container {
-  // background-color: #ccc;
-  border-radius: 0.5rem;
   display: -webkit-flex;
   display: flex;
-
-  -webkit-align-content: center;
-  align-content: center;
-  padding-bottom: 0.5rem;
-  overflow-x: scroll;
-  -webkit-overflow-scrolling: touch;
-  // height: 250px;
-  & > :last-child {
-    margin-left: -0.75rem;
-  }
-  & > :first-child {
-    margin-left: 1.25rem;
-  }
-}
-
-.black-card-container {
-  padding: 0.5rem;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  /* You can set flex-wrap and flex-direction individually */
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  /* Or do it all in one line with flex flow */
+  -webkit-flex-flow: row wrap;
+  flex-flow: row wrap;
+  /* tweak the where items line up on the row */
+  /* valid values are: flex-start, flex-end, space-between, space-around, stretch */
+  -webkit-align-content: flex-end;
+  align-content: flex-end;
 }
 
 .gamecard {
-  flex: none;
+  cursor: pointer;
   text-align: left;
   font-size: 0.75rem;
   font-weight: bold;
   padding: 0.5rem;
-  width: 125px;
-  height: 175px;
-  margin: 1rem;
+  min-width: 125px;
+  max-width: 125px;
+  min-height: 175px;
+  position: relative;
+  margin: 0.5rem;
   border-radius: 0.3rem;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  position: relative;
+  transition: all .2s ease-in-out;
   &:hover, :focus {
     transform: scale(1.05);
-    transition: all .1s ease-in-out;
+    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.2), 0 8px 22px 0 rgba(0, 0, 0, 0.19);
   }
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none;   /* Chrome/Safari/Opera */
@@ -59,7 +109,6 @@
   -ms-user-select: none;       /* Internet Explorer/Edge */
   user-select: none;
   &.black-card {
-    margin: 1rem auto 1rem auto;
     background-color: black;
     color: white;
   }
@@ -84,8 +133,8 @@
 .pick-count {
   text-align: right;
   width: 109px;
-  position: absolute;
   bottom: 0.5rem;
+  position: absolute;
 }
 
 @media screen and (max-width: 793px) {
@@ -93,15 +142,35 @@
     margin-top: -1rem;
     background-color: #fff;
   }
+  .card-container {
+    // background-color: #ccc;
+    border-radius: 0.5rem;
+    display: -webkit-flex;
+    display: flex;
+
+    -webkit-align-content: center;
+    align-content: center;
+    padding-bottom: 0.5rem;
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
+    // height: 250px;
+    -webkit-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    & > :last-child {
+      margin-left: -0.75rem;
+    }
+    & > :first-child {
+      margin-left: 11rem;
+    }
+  }
   .white-card {
     border: 1px;
     border-style: solid;
     border-color: #aaa;
-    //background-color: #ffb !important;
   }
 
-  .scores-container {
-    padding: 1rem 1rem 0 1rem;
+  .gamecard {
+    flex: none;
   }
 
   .head-buttons-container {

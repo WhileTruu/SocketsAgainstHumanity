@@ -30,14 +30,22 @@ export default class Card extends Component {
   createMarkup(text) { return { __html: text } }
 
   render() {
-    const { type, text, id, pickedCards } = this.props
+    const { type, text, id, pickedCards, pick } = this.props
     return (
       <div
         className={`gamecard ${type}-card${pickedCards.indexOf(id) < 0 ? '' : ' picked-card'}`}
         onClick={::this.onCardClick}
       >
-        <div className="cardText" dangerouslySetInnerHTML={this.createMarkup(text)}>
+        <div
+          className="cardText"
+          dangerouslySetInnerHTML={this.createMarkup(text)}
+        >
         </div>
+        {type === 'black' ?
+          <div className="pick-count">
+           {`pick ${pick}`}
+          </div>
+        : ''}
       </div>
     )
   }
