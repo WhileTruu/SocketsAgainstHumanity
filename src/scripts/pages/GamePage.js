@@ -58,11 +58,11 @@ class GamePage extends Component {
       submitText = submitText + (cardsToPick > 1 ? 'more cards' : 'card')
     }
     return (
-      <div className="game-container">
+      <div className="main-container">
         {whiteCards.length !== 0 && blackCard !== {} ?
         <div>
           <div>
-            <div className="game-top-container">
+            <div className="row-items-container">
               <div
                 className="exit-button"
                 type="button"
@@ -79,7 +79,7 @@ class GamePage extends Component {
                 pick={blackCard.pick}
               />
               <input
-                className="game-button"
+                className="score-button"
                 type="button"
                 onClick={::this.toggleScores}
                 value="scores"
@@ -95,17 +95,15 @@ class GamePage extends Component {
               pick={blackCard.pick}
             />
           </div>
-          <div className="game-items-container">
-            <div>
-              <input
-                className="main-button"
-                type="button"
-                onClick={::this.submitCards}
-                value={submitText}
-                onMouseUp={event => event.target.blur()}
-              />
-            </div>
-           </div>
+          <div className="row-items-container">
+            <input
+              className="main-button"
+              type="button"
+              onClick={::this.submitCards}
+              value={submitText}
+              onMouseUp={event => event.target.blur()}
+            />
+          </div>
          </div>
          :
          <div className="scores-container">

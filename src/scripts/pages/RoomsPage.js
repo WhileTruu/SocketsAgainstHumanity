@@ -34,7 +34,18 @@ class RoomsPage extends Component {
     const { rooms, myName } = this.props.join
     return (
       <div className="main-container">
-        <div className="component-heading">Rooms</div>
+        <div className="row-items-container">
+          <div
+            className="exit-button"
+            type="button"
+            onClick={::this.onBackPress}
+          >
+          <i className="fa fa-chevron-left" />
+          <span> back</span>
+          </div>
+          <div className="component-heading">Rooms</div>
+          <div className="width-provider"></div>
+        </div>
         {
           rooms.length > 0 ?
           <div>
@@ -47,14 +58,6 @@ class RoomsPage extends Component {
           </div> :
           <Alert alertType="info" message="No rooms available. You could create one." />
         }
-        <div>
-          <input
-            className="main-button"
-            type="button"
-            onClick={::this.onBackPress}
-            value="back"
-          />
-        </div>
       </div>
     )
   }

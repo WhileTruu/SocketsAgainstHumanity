@@ -14,7 +14,9 @@ export default class RoomList extends Component {
       <div>
         {rooms
           .map((room) => (
-            <Room myName={myName} key={rooms.indexOf(room)} room={room} />
+            <div className="row-items-container">
+              <Room myName={myName} key={rooms.indexOf(room)} room={room} />
+            </div>
           ))
         }
       </div>

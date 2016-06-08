@@ -62,25 +62,24 @@ class ScoringPage extends Component {
       scoreAbles.push({ playerId, scoreAble })
     })
     return (
-      <div className="game-container">
-        <div className="head-buttons-container">
-          <input
-            className="main-button"
+      <div className="main-container">
+        <div className="row-items-container">
+          <div
+            className="exit-button"
             type="button"
             onClick={::this.onExitRoom}
-            value="exit room"
-          />
+          >
+            <i className="fa fa-chevron-left" />
+            <span> exit</span>
+          </div>
           <input
-            className="main-button"
+            className="score-button"
             type="button"
             onClick={::this.toggleScores}
             value="scores"
             onMouseUp={event => event.target.blur()}
             onTouchEnd={event => event.target.blur()}
           />
-        </div>
-        <div>
-          {this.state.scoreToggle ? <ScoreBoard players={this.props.game.players} /> : ''}
         </div>
           {this.state.winner ? <div className="component-heading">{`${this.state.winnerName} won.`}</div> : ''}
         <div className="component-heading">
@@ -100,6 +99,7 @@ class ScoringPage extends Component {
             evaluator={evaluator}
           />
         )) : ''}
+        <ScoreBoard open={this.state.scoreToggle} players={players} />
       </div>
     )
   }

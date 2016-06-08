@@ -88,21 +88,20 @@
 .score-container {
   box-shadow: -8px 0 20px 0 rgba(0, 0, 0, 0.15), -12px 0 40px 0 rgba(0, 0, 0, 0.13);
   transition: all 2s ease-in-out;
-  transform: translateX(-250px);
+  //transform: translateX(-250px);
   position: absolute;
   width: 250px;
   top: 0;
-  right: 0;
+  right: -350px;
   height: 100%;
-  transition: all 0.5s;
+  transition: all .5s;
   border-radius: 0;
   padding: 1.5rem 0.5rem 1.5rem 0.5rem;
   background-color: rgba(225, 225, 225, 1);
-
   &.open {
-    transform: translateX(0);
+    transform: translateX(-350px);
   }
   &.closed {
-    transform: translateX(350px);
+    transform: translateX(0);
   }
 }

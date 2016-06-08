@@ -58,6 +58,7 @@
     "react-router": "^2.2.4",
     "redux": "^3.4.0",
     "redux-thunk": "^2.0.1",
+    "socket.io": "^1.4.6",
     "sqlite3": "^3.1.3"
   }
 }

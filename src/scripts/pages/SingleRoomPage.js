@@ -51,10 +51,21 @@ class SingleRoomPage extends Component {
     return (
       <div>
         <div className="main-container">
-          <div className="component-heading">{id}</div>
+          <div className="row-items-container">
+            <div
+              className="exit-button"
+              type="button"
+              onClick={::this.onExitRoom}
+            >
+            <i className="fa fa-chevron-left" />
+            <span> exit</span>
+            </div>
+            <div className="component-heading">{id}</div>
+            <div className="width-provider"></div>
+          </div>
           <PlayerList players={players} />
           {mySocketId === gameStarterId ?
-            <div>
+            <div className="row-items-container">
               <input
                 className="main-button"
                 type="button"
@@ -63,14 +74,6 @@ class SingleRoomPage extends Component {
               />
             </div> : ''
           }
-          <div>
-            <input
-              className="main-button"
-              type="button"
-              onClick={::this.onExitRoom}
-              value="exit room"
-            />
-          </div>
           {error === '' ? '' : <Alert alertType="warning" message={error} />}
         </div>
       </div>

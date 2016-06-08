@@ -1,0 +1,56 @@
+.main-button {
+  @extend .btn;
+  @extend .btn-primary;
+  width: 100%;
+  margin: 0.5rem;
+  background-color: transparent;
+  border-color: gray;
+  color: #333;
+  &:hover {
+    background-color: darkgray;
+    border-color: gray;
+    color: #333;
+  }
+  &:active {
+    background-color: #777 !important;
+    border-color: gray !important;
+    color: #333 !important;
+  }
+  &:focus {
+    background-color: #777 !important;
+    border-color: gray !important;
+    color: #333 !important;
+    outline: none !important;
+  }
+}
+
+.top-button {
+  @extend .main-button;
+  border-color: transparent;
+  &:hover {
+    border-color: transparent;
+  }
+  &:active {
+    border-color: transparent !important;
+  }
+  &:focus {
+    border-color: transparent !important;
+  }
+}
+
+.exit-button {
+  @extend .top-button;
+  text-align: left;
+  color: #35f;
+}
+
+.top-button span {
+  padding-left: 0.5rem;
+  padding-bottom: 0.1rem;
+}
+
+.score-button {
+  @extend .top-button;
+  text-align: right !important;
+  color: #c00;
+}

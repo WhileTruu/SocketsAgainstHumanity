@@ -1,0 +1,74 @@
+.main-container {
+  @extend .container-fluid;
+  max-width: 793px;
+  background-color: lightgrey;
+  padding: 0 0 1rem 0;
+  margin-top: 1rem;
+  border-radius: 0.5rem;
+}
+
+.row-items-container {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row; /* works with row or column */
+  flex-direction: row;
+  -webkit-align-items: flex-start;
+  align-items: flex-start;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+.rooms-info-bar {
+  display: flex;
+  -webkit-justify-content: center;
+  justify-content: center;
+  padding: 0 1rem 0 1rem;
+}
+
+.card-container {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  /* You can set flex-wrap and flex-direction individually */
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  /* Or do it all in one line with flex flow */
+  -webkit-flex-flow: row wrap;
+  flex-flow: row wrap;
+  /* tweak the where items line up on the row */
+  /* valid values are: flex-start, flex-end, space-between, space-around, stretch */
+  -webkit-align-content: flex-end;
+  align-content: flex-end;
+}
+
+@media screen and (max-width: 793px) {
+  .card-container {
+    // background-color: #ccc;
+    border-radius: 0.5rem;
+    display: -webkit-flex;
+    display: flex;
+
+    -webkit-align-content: center;
+    align-content: center;
+    padding-bottom: 0.5rem;
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
+    // height: 250px;
+    -webkit-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    & > :last-child {
+      margin-left: -0.75rem;
+    }
+    & > :first-child {
+      margin-left: 11rem;
+    }
+  }
+  .main-container {
+    background-color: #fff;
+  }
+}

@@ -74,7 +74,7 @@ class StartPage extends Component {
       <div>
         <div className="main-container">
           <div className="component-heading">Sockets Against Humanity</div>
-          <div>
+          <div className="row-items-container">
             <input
               className="text-input"
               type="text"
@@ -83,7 +83,7 @@ class StartPage extends Component {
               placeholder="enter your name"
             />
           </div>
-          <div>
+          <div className="row-items-container">
             <input
               className="main-button"
               type="button"
@@ -91,7 +91,7 @@ class StartPage extends Component {
               value="create room"
             />
           </div>
-          <div>
+          <div className="row-items-container">
             <input
               className="main-button"
               type="button"
