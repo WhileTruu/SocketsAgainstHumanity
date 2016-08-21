@@ -8,7 +8,7 @@ const app = express()
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
 
-if (process.argv[2] === 'develop') {
+if (process.env.NODE_ENV === 'development') {
   const webpack = require('webpack')
   const config = require('./webpack.config')
   const webpackMiddleware = require('webpack-dev-middleware')
@@ -29,7 +29,7 @@ if (process.argv[2] === 'develop') {
 addListenersToSocket(io)
 
 app.get('*', (request, response) => {
-  response.sendFile(path.join(__dirname, 'build/index.html'))
+  response.sendFile(path.join(__dirname, 'dist/index.html'))
 })
 
 http.listen(1337, (error) => {
